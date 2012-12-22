@@ -1,7 +1,8 @@
 <idea-plugin version="2">
   <name>Java2SQL</name>
   <description>Plug-in that transforms Java strings with constant values to SQL text and replaces constants with their values.</description>
-  <version>0.3</version>
+  <version>0.3.1</version>
+  <idea-version since-build="111.167">11</idea-version>
   <vendor>Andrey Grebeniuk</vendor>
 
   <application-components>

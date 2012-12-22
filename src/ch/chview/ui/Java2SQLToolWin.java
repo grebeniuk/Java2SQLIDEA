@@ -35,6 +35,7 @@ public class Java2SQLToolWin implements ToolWindowFactory
         JComponent toolBar = ActionManager.getInstance().createActionToolbar("Java2SQL", group, true).getComponent();
 
         JScrollPane scrollPane = new JScrollPane(sqlText);
+        scrollPane.setAutoscrolls(true);
 
         FormLayout layout = new FormLayout(
                 "pref, pref:grow",
