@@ -1,4 +1,4 @@
-package ch.ch.tools.intellij.log;
+package ch.tools.intellij.log;
 
 /**
  * Abstratct logger.

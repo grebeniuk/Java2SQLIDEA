@@ -1,29 +1,24 @@
 package ch.chview.ui;
 
-import ch.ch.tools.intellij.log.Logger;
-import ch.intellij.chview.psiresolvers.AbstractResolver;
-import ch.intellij.chview.psiresolvers.PsiValueResolverFactory;
+import ch.tools.intellij.log.Logger;
+import ch.tools.intellij.psi.PsiTools;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.tree.ElementType;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Main starting point for the Plugin's logic
+ * Main entering point for the Plugin's logic
  */
 public class MainAction extends AnAction
 {
     private static final Logger log = Logger.getLogger(MainAction.class);
-    private JTextPane textPane;
+    private JTextArea textPane;
 
     public MainAction(String title, String descritpion, Icon icon)
     {
@@ -38,11 +33,7 @@ public class MainAction extends AnAction
 
     protected void runAction(AnActionEvent anActionEvent)
     {
-        List<IElementType> types = new ArrayList<IElementType>();
-
-        types.add(ElementType.POLYADIC_EXPRESSION);
-        types.add(ElementType.BINARY_EXPRESSION);
-
+        String sql;
         // get opened file in the active editor
         PsiFile pf = DataKeys.PSI_FILE.getData(anActionEvent.getDataContext());
         Editor editor = DataKeys.EDITOR.getData(anActionEvent.getDataContext());
@@ -59,36 +50,45 @@ public class MainAction extends AnAction
 
         // try to find a root element that can represent a String variable in the PSI tree
         PsiElement pe = pf.findElementAt(editor.getCaretModel().getOffset());
-        pe = PsiTreeUtil.getParentOfType(pe, PsiPolyadicExpression.class, PsiBinaryExpression.class);
+        pe = PsiTreeUtil.getParentOfType(pe,
+                PsiPolyadicExpression.class,
+                PsiBinaryExpression.class,
+                PsiMethodCallExpression.class);
 
         if (pe == null)
         {
             Messages.showMessageDialog("Please select valid Java string expression", "Java2SQL",
                     Messages.getInformationIcon());
+            return;
         }
-        else
+
+        sql = PsiTools.psiElementToString(pe);
+
+        if (textPane != null)
         {
-            PsiElement[] elements = pe.getChildren();
-            StringBuffer buf = new StringBuffer();
-            
-            for (PsiElement element : elements)
-            {
-                buf.append(AbstractResolver.getNormalizedString(
-                        PsiValueResolverFactory.getResolver(element).resolveAsString()));
-            }
-
-            log.debug("Src: " + pe.getText());
-            log.debug("Res: " + buf.toString());
-
-            if (textPane != null)
-            {
-                textPane.setText(buf.toString());
-            }
+            setText(sql);
         }
+
     }
 
-    public void setTextPane(JTextPane textPane)
+    private void setText(String str)
+    {
+        final String buf = str;
+        // using the Swing Thread.
+        SwingUtilities.invokeLater(new Runnable()
+        {
+            public void run()
+            {
+                textPane.setText(buf);
+                textPane.repaint();
+            }
+        });
+
+    }
+
+    public void setTextPane(JTextArea textPane)
     {
         this.textPane = textPane;
+
     }
 }

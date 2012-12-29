@@ -1,4 +1,4 @@
-package ch.ch.tools.intellij.log;
+package ch.tools.intellij.log;
 
 /**
  * Simple logger public API that should be used in this Plug-In for logging purpose.

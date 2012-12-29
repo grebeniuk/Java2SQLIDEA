@@ -1,5 +1,6 @@
 package ch.intellij.chview.psiresolvers;
 
+import ch.tools.intellij.log.Logger;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -7,10 +8,13 @@ import com.intellij.psi.PsiElement;
  */
 public abstract class AbstractResolver implements IResolver
 {
+    private static final Logger log = Logger.getLogger(AbstractResolver.class);
+
     protected PsiElement element;
 
     public AbstractResolver(PsiElement element)
     {
+        log.debug("Resolver class: " + this.getClass());
         this.element = element;
     }
 

@@ -1,7 +1,23 @@
 <idea-plugin version="2">
   <name>Java2SQL</name>
-  <description>Plug-in that transforms Java strings with constant values to SQL text and replaces constants with their values.</description>
-  <version>0.3.1</version>
+  <description>
+      Plug-in that transforms Java strings with constant values to SQL text and replaces constants with their values.
+      Just put cursor to the SQL string in your code and press the button in the plugin window > SQL is ready to use:
+
+      [[
+
+      int value = 1;
+      String sql = "select " + value + " from dual";
+
+      ]]
+
+      >>
+      Plugin
+      >>
+
+      select 1 from dual
+  </description>
+  <version>0.4</version>
   <idea-version since-build="111.167">11</idea-version>
   <vendor>Andrey Grebeniuk</vendor>
 

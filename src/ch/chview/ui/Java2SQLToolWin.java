@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
+import com.intellij.ui.components.JBScrollPane;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -23,9 +24,15 @@ public class Java2SQLToolWin implements ToolWindowFactory
         toolWindow.setIcon(IconLoader.getIcon(Icons.SQL));
         Component component = toolWindow.getComponent();
 
-        JTextPane sqlText = new JTextPane();
+        JTextArea sqlText = new JTextArea(1, 1);
         sqlText.setBackground(new Color(255, 248, 220));
         sqlText.setEditable(false);
+        sqlText.setLineWrap(false);
+
+        JBScrollPane scrollPane = new JBScrollPane();
+        scrollPane.setViewportView(sqlText);
+        scrollPane.setAutoscrolls(true);
+
 
         MainAction action = new MainAction("Java2SQL", "Java2SQL", IconLoader.getIcon(Icons.SQL));
         action.setTextPane(sqlText);
@@ -34,13 +41,11 @@ public class Java2SQLToolWin implements ToolWindowFactory
         group.add(action);
         JComponent toolBar = ActionManager.getInstance().createActionToolbar("Java2SQL", group, true).getComponent();
 
-        JScrollPane scrollPane = new JScrollPane(sqlText);
-        scrollPane.setAutoscrolls(true);
-
         FormLayout layout = new FormLayout(
-                "pref, pref:grow",
+                "left:pref, fill:pref:grow",
                 "fill:pref:grow");
         CellConstraints cc = new CellConstraints();
+
 
         JPanel p = new JPanel(layout);
         p.add(toolBar, cc.xy (1, 1));

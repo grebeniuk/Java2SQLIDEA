@@ -1,7 +1,8 @@
 package ch.intellij.chview.psiresolvers;
 
-import ch.ch.tools.intellij.log.Logger;
+import ch.tools.intellij.log.Logger;
 import com.intellij.psi.*;
+import com.intellij.psi.impl.compiled.ClsMethodImpl;
 
 public class PsiValueResolverFactory
 {
@@ -15,6 +16,12 @@ public class PsiValueResolverFactory
      */
     public static IResolver getResolver(PsiElement element)
     {
+        if (element == null)
+        {
+            log.debug("Element is NULL, return PsiEmptyResolver.");
+            return new PsiEmptyResolver(element);
+        }
+
         log.debug("Element: " + element.getText() +
                 ", type = " + element.getNode().getElementType() +
                 ", class = " + element.getClass());
@@ -46,6 +53,10 @@ public class PsiValueResolverFactory
         else if (element instanceof PsiField)
         {
             return new FieldResolver(element);
+        }
+        else if (element instanceof ClsMethodImpl)
+        {
+            return new PsiEmptyResolver(element);
         }
         else
         {
